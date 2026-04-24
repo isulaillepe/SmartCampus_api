@@ -10,7 +10,12 @@ A JAX-RS RESTful Web Service built to manage rooms and sensors within a smart ca
 - **Container:** Apache Tomcat 9 (via Cargo Maven Plugin)
 
 ## File Structure
+<<<<<<< HEAD
 ```bash
+=======
+
+```text
+>>>>>>> bb834a9 (docs: add markdown code block formatting to project file structure in README)
 src/main/java/com/mycompany/smartcampus_api
 ├── dao/ # Data Access Objects (Generic DAO)
 ├── database/ # MockDatabase Singleton
@@ -19,7 +24,12 @@ src/main/java/com/mycompany/smartcampus_api
 ├── mappers/ # ExceptionMappers
 ├── models/ # POJOs (Room, Sensor, Reading)
 └── resources/ # REST Endpoints (Sub-resource Locators)
+<<<<<<< HEAD
  ```
+=======
+```
+
+>>>>>>> bb834a9 (docs: add markdown code block formatting to project file structure in README)
 ## How to Run Locally
 
 You do not need to install Maven or Tomcat on your machine. This project uses the Maven Wrapper (`mvnw`) and the Cargo plugin to automatically download and run the server.
