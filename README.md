@@ -100,6 +100,31 @@ This API uses standard HTTP status codes, mapped via Custom Exception Mappers:
 - `409 Conflict` - Deleting a room that still has active sensors.
 - `500 Internal Server Error` - Unexpected server issues.
 
+## curl commands
+
+- `GET /rooms` - Retrieves a list of all rooms.
+  ```bash
+  curl -X GET "http://localhost:5009/SmartCampus_api/api/v1/rooms"
+  ```
+- `POST /rooms` - Creates a new room.
+  ```bash
+  curl -X POST "http://localhost:5009/SmartCampus_api/api/v1/rooms" \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Room 101\",\"capacity\":25}"
+  ```
+- `GET /rooms/{roomId}` - Retrieves metadata for a specific room.
+  ```bash
+  curl -X GET "http://localhost:5009/SmartCampus_api/api/v1/rooms/1"
+  ```
+- `DELETE /rooms/{roomId}` - Deletes a room (Only allowed if no active sensors are assigned).
+  ```bash
+  curl -X DELETE "http://localhost:5009/SmartCampus_api/api/v1/rooms/1"
+  ```
+- `POST /rooms/{roomId}` - Register a Sensor(Linked to the room).
+  ```bash
+  curl -X POST "curl -X POST http://localhost:5009/SmartCampus_api/api/v1/sensors"
+  ```
+
 ## Final Submission Answers
 
 Smart Campus API - Conceptual Report
