@@ -10,12 +10,8 @@ A JAX-RS RESTful Web Service built to manage rooms and sensors within a smart ca
 - **Container:** Apache Tomcat 9 (via Cargo Maven Plugin)
 
 ## File Structure
-<<<<<<< HEAD
-```bash
-=======
 
-```text
->>>>>>> bb834a9 (docs: add markdown code block formatting to project file structure in README)
+```bash
 src/main/java/com/mycompany/smartcampus_api
 ├── dao/ # Data Access Objects (Generic DAO)
 ├── database/ # MockDatabase Singleton
@@ -24,15 +20,25 @@ src/main/java/com/mycompany/smartcampus_api
 ├── mappers/ # ExceptionMappers
 ├── models/ # POJOs (Room, Sensor, Reading)
 └── resources/ # REST Endpoints (Sub-resource Locators)
-<<<<<<< HEAD
- ```
-=======
 ```
 
->>>>>>> bb834a9 (docs: add markdown code block formatting to project file structure in README)
 ## How to Run Locally
 
+Option 1-
+
+1. Open Project: In NetBeans, go to File > Open Project and select the SmartCampus_api folder.
+
+2. Clean and Build: Right-click the project name in the left-hand sidebar and select Clean and Build. This will trigger Maven to download the dependencies.
+
+3. Run the Server: Right-click the project name and select Run.
+
+Note: The project is configured to use the Cargo Plugin, which will automatically start an embedded Tomcat server.
+
+Verification: Look for the message [INFO] [talledLocalContainer] Tomcat 9.x started on port [5009] in the NetBeans output console.
+
 You do not need to install Maven or Tomcat on your machine. This project uses the Maven Wrapper (`mvnw`) and the Cargo plugin to automatically download and run the server.
+If so,
+Option 2 -
 
 1. Open your terminal and navigate to the project directory:
 
