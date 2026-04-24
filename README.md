@@ -137,13 +137,13 @@ new instance instantiated for every incoming request, or does the runtime treat 
 singleton? Elaborate on how this architectural decision impacts the way you manage and
 synchronize your in-memory data structures (maps/lists) to prevent data loss or race conditions.
 
-- Answer: By default, JAX-RS Resource classes are request-scoped; the runtime creates a brand-new instance for every incoming HTTP request and disposes of it once the response is sent. Because instance variables are wiped with every request, we must use static collections in our MockDatabase to persist data. Since multiple threads access these static lists simultaneously, we must use thread-safe structures or synchronized blocks to prevent race conditions and ConcurrentModificationException errors during CRUD operations.
+- Answer: JAX-RS resource classes request scoped therefore by default for every incoming HTTP request a brand-new instance will be created and will be disposed of once the event is sent. Because with every request a instant variable is wiped out we must use a static collection in our mock database where it is able to persist data. Since simultaneously multiple threads access these static lists. A thread safe structure or a synchronised block should be used to prevent race conditions and ConcurrentModificationException during crud operations.
 
   1.2 The "Discovery" Endpoint
 
 Question: Why is the provision of ”Hypermedia” (links and navigation within responses) considered a hallmark of advanced RESTful design (HATEOAS)? How does this approach benefit client developers compared to static documentation?
 
-- Answer: Hypermedia (HATEOAS) allows a client to dynamically discover available resources and actions through links provided in the JSON response. This benefits developers by reducing "hard-coding" of URLs in the client application. If the API structure changes, the client can still navigate correctly by following the links, making the system more resilient and self-documenting compared to relying on static PDF documentation that can quickly become outdated.
+- Answer: Hypermedia (HATEOAS) is allowing a client to discover available resources dynamically through the links provided by JSON. This is beneficial for developers by reducing hard recording of the URL and API structure changes can be correctly navigated by the clients using the following links making the system more resilient and self dominant compared to other static documentations.
 
 Part 2: Data Modelling and Persistence
 
@@ -153,13 +153,13 @@ Question: When returning a list of rooms, what are the implications of returning
 IDs versus returning the full room objects? Consider network bandwidth and client side
 processing.
 
-- Answer: Returning only IDs minimizes the response size, saving bandwidth and reducing processing time on the client. However, the client must make additional HTTP requests to fetch the full details for each room, which increases the overall latency and number of round trips. Returning full objects is more convenient for the client and reduces the number of requests but uses more bandwidth.
+- Answer: the response size is only minimise by returning only the IDs, which saves the Bandwidth and clients processing time. However, if the client is to take additional HTTP request to fetch the details fully for each room, it will increase the overall latency and the number of roundtrips , therefore returning full logs is more convenient for the client and it will reduce the number of request but uses more bandwidth.
 
   2.2 Room Deletion Logic
 
 Question: Is the DELETE operation idempotent in your implementation? Provide a detailed justification by describing what happens if a client mistakenly sends the exact same DELETE request for a room multiple times
 
-- Answer: Yes, the DELETE operation is idempotent. If the client sends the same DELETE request multiple times, the first request will successfully delete the room and return a 204 status. Subsequent requests will attempt to delete the same room, but since it no longer exists in the database, they will return a 404 Not Found status. Although the response body/status differs (204 vs 404), the overall state of the resource on the server remains "deleted" after the first successful request, fulfilling the idempotency requirement (the operation's effect doesn't change with repeated calls).
+- Answer: Yes, the DELETE operation is idempotent. If the same delete request is sent by the client multiple times the first request will be successfully delete the Room and return 204 status. While the other requests will attempt to delete the same room but since it doesn’t exist in the database, they will return 404 not found status. Although the respond body differs the resource of the server remains deleted after the first attempt fulfiling the idempotent requirement.
 
 Part 3: Sensor Operations & Linking
 
@@ -167,7 +167,7 @@ Part 3: Sensor Operations & Linking
 
 Question: We explicitly use the @Consumes (MediaType.APPLICATION_JSON) annotation on the POST method. Explain the technical consequences if a client attempts to send data in a different format, such as text/plain or application/xml. How does JAX-RS handle this mismatch?
 
-- Answer: The JAX-RS runtime uses MessageBodyReaders to deserialize incoming request bodies. If a client sends data in a format (e.g., XML) that does not match the endpoint's @Consumes(MediaType.APPLICATION_JSON) annotation, the runtime will fail to find a compatible MessageBodyReader. This will result in a 415 Unsupported Media Type error being returned to the client, as the server cannot process the request payload.
+- Answer: The JAX-RS runtime uses MessageBodyReaders which deserialises the incoming request bodies. If the endpoints @Consumes(MediaType.APPLICATION_JSON) doesn’t match the clients data in format (e.g., XML), the runtime will fail to find a compatible MessageBodyReader. Which will result in a 415 unsupported media type being returned to the client. As the server can not process the requested payload
 
   3.2 Filtered Retrieval & Search
 
@@ -195,7 +195,7 @@ Question: Why is HTTP 422 often considered more semantically accurate than a sta
 
 Question: From a cybersecurity standpoint, explain the risks associated with exposing internal Java stack traces to external API consumers. What specific information could an attacker gather from such a trace?
 
-- Answer: From a cybersecurity standpoint, exposing internal Java stack traces to external API consumers is extremely risky because stack traces contain sensitive information about the internal implementation details of the application. This information can include file paths, library versions, class names, and the exact sequence of method calls that led to an error. An attacker can use this information to perform detailed reconnaissance of the system, identify potential vulnerabilities, and craft targeted exploits. For example, a stack trace might reveal that the application uses an outdated version of a specific library that has known security vulnerabilities, or it might expose the internal file structure of the server, which could help an attacker map the system and identify other potential attack vectors. In a production environment, such information should be sanitized and replaced with generic error messages to prevent attackers from gaining valuable insights into the system's architecture and potential weaknesses.
+- Answer: exposing internal Java stack traces to external API consumers is extremely risky from a cyber security standpoint because stack traces contain sensitive information about details of internal implementation of the application. This can be used to find file parts , library versions , Class names as well as exact sequence of methods called that led to an error. Attacker can use this to perform detailed reconnaissance of the system, to identify potential vulnerabilities, and can craft targeted exploits or it might expose the internal file structure of the server, which could help an attacker map the system and identify other potential attack vectors. In a production environment, such information should be sanitized and replaced with generic error messages to prevent attackers from gaining valuable insights into the system's architecture and potential weaknesses.
 
   5.4 API Request & Response Logging Filters
 
