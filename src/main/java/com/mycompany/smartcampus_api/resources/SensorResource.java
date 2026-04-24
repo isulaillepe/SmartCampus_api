@@ -17,19 +17,16 @@ public class SensorResource {
     private GenericDAO<Sensor> sensorDao = new GenericDAO<>(MockDatabase.sensors);
     private GenericDAO<Room> roomDao = new GenericDAO<>(MockDatabase.rooms);
 
-    // UPDATED: Now accepts an optional ?type= parameter for filtering
+    /** Retrieves all sensors, optionally filtered by type. */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllSensors(@QueryParam("type") String type) {
         List<Sensor> allSensors = sensorDao.getAll();
 
-        // If no query parameter is provided, return the full list
         if (type == null || type.trim().isEmpty()) {
             return Response.ok(allSensors).build();
         }
 
-        // If a type IS provided, filter the list ignoring case (e.g., "temperature" ==
-        // "Temperature")
         List<Sensor> filteredSensors = allSensors.stream()
                 .filter(sensor -> type.equalsIgnoreCase(sensor.getType()))
                 .collect(Collectors.toList());
@@ -59,7 +56,6 @@ public class SensorResource {
 
         Room targetRoom = roomDao.getById(sensor.getRoomId());
         if (targetRoom == null) {
-            // WE MUST THROW THE EXCEPTION HERE FOR PHASE 5!
             throw new LinkedResourceNotFoundException(
                     "Cannot assign sensor. Room ID '" + sensor.getRoomId() + "' does not exist.");
         }
@@ -71,6 +67,7 @@ public class SensorResource {
         return Response.status(Response.Status.CREATED).entity(createdSensor).build();
     }
 
+    /** Sub-resource locator for sensor readings. */
     @Path("/{sensorId}/readings")
     public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
         return new SensorReadingResource(sensorId);

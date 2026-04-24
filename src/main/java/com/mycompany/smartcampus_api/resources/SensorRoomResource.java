@@ -1,15 +1,6 @@
 
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.smartcampus_api.resources;
-
-/**
- *
- * @author isulailleperuma
- */
 
 import com.mycompany.smartcampus_api.dao.GenericDAO;
 import com.mycompany.smartcampus_api.database.MockDatabase;
@@ -21,13 +12,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/rooms") // This maps to /api/v1/rooms
+@Path("/rooms")
 public class SensorRoomResource {
 
-    // Instantiate the DAO for Rooms, pointing it to our static MockDatabase
     private GenericDAO<Room> roomDao = new GenericDAO<>(MockDatabase.rooms);
 
-    // GET / - Provide a comprehensive list of all rooms
+    /** Retrieves all rooms. */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRooms() {
@@ -35,12 +25,11 @@ public class SensorRoomResource {
         return Response.ok(rooms).build();
     }
 
-    // POST / - Enable the creation of new rooms
+    /** Creates a new room. */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRoom(Room room) {
-        // Basic validation: ensure the room has an ID before adding
         if (room.getId() == null || room.getId().trim().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
                            .entity("Room ID cannot be empty.")
@@ -51,7 +40,7 @@ public class SensorRoomResource {
         return Response.status(Response.Status.CREATED).entity(createdRoom).build();
     }
 
-    // GET /{roomId} - Fetch detailed metadata for a specific room
+    /** Retrieves detailed metadata for a specific room. */
     @GET
     @Path("/{roomId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -66,7 +55,7 @@ public class SensorRoomResource {
         return Response.ok(room).build();
     
     }
-    // DELETE /{roomId} - Allow room decommissioning with safety logic
+    /** Deletes a room if it contains no active sensors. */
     @DELETE
     @Path("/{roomId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -79,10 +68,8 @@ public class SensorRoomResource {
                            .build();
         }
 
-        // Business Logic Constraint: Check for active sensors
         if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
-    // We just throw the exception! The Mapper does the rest.
-    throw new RoomNotEmptyException("Cannot delete room. Active sensors are still assigned.");
+            throw new RoomNotEmptyException("Cannot delete room. Active sensors are still assigned.");
 
         }
 

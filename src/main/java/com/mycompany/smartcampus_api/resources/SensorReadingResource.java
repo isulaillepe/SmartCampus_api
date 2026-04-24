@@ -19,20 +19,19 @@ public class SensorReadingResource {
     private GenericDAO<SensorReading> readingDao = new GenericDAO<>(MockDatabase.readings);
     private GenericDAO<Sensor> sensorDao = new GenericDAO<>(MockDatabase.sensors);
 
-    // Constructor to receive the sensor ID from the parent locator
     public SensorReadingResource(String parentSensorId) {
         this.parentSensorId = parentSensorId;
     }
 
+    /** Retrieves readings for the parent sensor. */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReadingsForSensor() {
-        // Return only readings that belong to this specific sensor
-        // (Assuming you have a way to link readings, otherwise returns all for now)
         List<SensorReading> readings = readingDao.getAll();
         return Response.ok(readings).build();
     }
 
+    /** Adds a reading and updates the parent sensor's current value. */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,13 +42,12 @@ public class SensorReadingResource {
             throw new LinkedResourceNotFoundException("Parent sensor not found.");
         }
 
-        // BUSINESS LOGIC: The 403 Forbidden Check
+        // Prevent updates if sensor is in maintenance
         if ("MAINTENANCE".equalsIgnoreCase(parentSensor.getStatus())) {
             throw new SensorUnavailableException(
                     "Cannot accept readings. Sensor '" + parentSensorId + "' is currently in MAINTENANCE mode.");
         }
 
-        // Ensure reading has an ID and timestamp
         if (reading.getId() == null) {
             reading.setId(UUID.randomUUID().toString());
         }
@@ -57,10 +55,8 @@ public class SensorReadingResource {
             reading.setTimestamp(System.currentTimeMillis());
         }
 
-        // Save the reading
         SensorReading createdReading = readingDao.add(reading);
 
-        // BUSINESS LOGIC: Update the parent sensor's currentValue!
         parentSensor.setCurrentValue(reading.getValue());
         sensorDao.update(parentSensor);
 
