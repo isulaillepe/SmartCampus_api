@@ -14,6 +14,7 @@ package com.mycompany.smartcampus_api.resources;
 import com.mycompany.smartcampus_api.dao.GenericDAO;
 import com.mycompany.smartcampus_api.database.MockDatabase;
 import com.mycompany.smartcampus_api.models.Room;
+import com.mycompany.smartcampus_api.exceptions.RoomNotEmptyException;
 
 import java.util.List;
 import javax.ws.rs.*;
@@ -80,10 +81,9 @@ public class SensorRoomResource {
 
         // Business Logic Constraint: Check for active sensors
         if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
-            // Note: In Part 5, we will upgrade this to throw a custom RoomNotEmptyException (409 Conflict)
-            return Response.status(Response.Status.CONFLICT)
-                           .entity("Conflict: Cannot delete room. Active sensors are still assigned.")
-                           .build();
+    // We just throw the exception! The Mapper does the rest.
+    throw new RoomNotEmptyException("Cannot delete room. Active sensors are still assigned.");
+
         }
 
         roomDao.delete(roomId);
