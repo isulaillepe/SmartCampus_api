@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GenericDAO<T extends BaseModel> {
-    
+
     // The specific database "table" (map) this DAO will operate on
     private final Map<String, T> databaseTable;
 

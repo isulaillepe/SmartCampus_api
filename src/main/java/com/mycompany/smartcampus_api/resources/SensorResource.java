@@ -4,7 +4,7 @@ import com.mycompany.smartcampus_api.dao.GenericDAO;
 import com.mycompany.smartcampus_api.database.MockDatabase;
 import com.mycompany.smartcampus_api.models.Room;
 import com.mycompany.smartcampus_api.models.Sensor;
-
+import com.mycompany.smartcampus_api.exceptions.LinkedResourceNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.*;
@@ -59,8 +59,9 @@ public class SensorResource {
 
         Room targetRoom = roomDao.getById(sensor.getRoomId());
         if (targetRoom == null) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Cannot assign sensor. Room ID '" + sensor.getRoomId() + "' does not exist.").build();
+            // WE MUST THROW THE EXCEPTION HERE FOR PHASE 5!
+            throw new LinkedResourceNotFoundException(
+                    "Cannot assign sensor. Room ID '" + sensor.getRoomId() + "' does not exist.");
         }
 
         Sensor createdSensor = sensorDao.add(sensor);
@@ -68,5 +69,10 @@ public class SensorResource {
         roomDao.update(targetRoom);
 
         return Response.status(Response.Status.CREATED).entity(createdSensor).build();
+    }
+
+    @Path("/{sensorId}/readings")
+    public SensorReadingResource getSensorReadingResource(@PathParam("sensorId") String sensorId) {
+        return new SensorReadingResource(sensorId);
     }
 }
